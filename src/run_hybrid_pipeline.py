@@ -693,38 +693,6 @@ def main_pipeline(mode="daily"):
                                                 logging.info(f"      Skipping YouTube video: {title}")
                                                 continue
 
-                                            # --- NEW LOGIC START ---
-                                            # Check for Manually Ingested Transcript (Deduplication)
-                                            # Assumption: Manual ingest stores key as "{class_name}.txt|{title}"
-                                            # We check exact match, then normalized match (stripped, lowercase, replaced '&')
-
-                                            potential_keys = [
-                                                f"{class_name}.txt|{title}",
-                                                f"{class_name}.txt|{title.strip()}",
-                                                f"{class_name}.txt|{title.strip().lower()}",
-                                                f"{class_name}.txt|{title.replace('&', 'and')}",
-                                                f"{class_name}.txt|{title.strip().replace('&', 'and')}",
-                                                f"{class_name}.txt|{title.strip().lower().replace('&', 'and')}",
-                                            ]
-
-                                            is_manually_ingested = False
-                                            matched_key = ""
-
-                                            for key_variant in potential_keys:
-                                                try:
-                                                    if embedding.url_exists_in_db_sync(key_variant):
-                                                        is_manually_ingested = True
-                                                        matched_key = key_variant
-                                                        break
-                                                except Exception as e:
-                                                    logging.warning(f"      Manual key check failed for {key_variant}: {e}")
-                                                    continue
-
-                                            if is_manually_ingested:
-                                                logging.info(f"      Skipping {title} (Matches manual ingest: {matched_key})")
-                                                continue
-                                            # --- NEW LOGIC END ---
-
                                             parsed_date = utils.parse_general_date(date_text) if date_text else None
                                             should_process = False
 
