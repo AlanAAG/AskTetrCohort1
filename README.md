@@ -19,44 +19,6 @@ The system is split into three main components:
 * **Automated Pipeline:** The entire data ingestion process is managed by a daily GitHub Actions workflow.
 * **Security:** API endpoints are secured with a mandatory API Key (`SECRET_API_KEY`) and rate limiting (`slowapi`).
 
-### Manual Transcript Ingestion (Fallback for Scraping Issues)
-
-If the automated Drive scraping fails, manually process transcript files:
-
-```bash
-# 1. Place .txt files in the manual directory
-# Format: {ClassName}.txt (e.g., Statistics.txt)
-
-# 2. Run the ingestion script
-python scripts/ingest_manual.py
-
-# 3. Check logs for detailed processing information
-tail -f logs/manual_ingest.log
-
-# 4. Optional: Validate file formats before processing
-python scripts/ingest_manual.py --validate-only
-
-# 5. Optional: Test run without database writes
-python scripts/ingest_manual.py --dry-run
-```
-
-**File Format:**
-```
-ClassName - Lecture Title
-Date: YYYY-MM-DD | Time: HH:MM AM/PM
-
-[Transcript content starting from line 4...]
-0:01 Welcome to the first lecture...
-5:23 Today we'll cover normal distributions...
-```
-
-**Key Features:**
-- **De-duplication:** Automatically skips files already processed
-- **Flexible Date Parsing:** Handles various date formats (YYYY-MM-DD, DD/MM/YYYY, "January 15, 2025")
-- **LLM Cleaning:** Uses Gemini to remove timestamps and improve readability
-- **Error Recovery:** Continues processing other files if one fails
-- **Comprehensive Logging:** Detailed logs for debugging and monitoring
-
 ### Whisper Fallback for Recordings
 
 Some Zoom and Drive recordings never expose the transcript panel. When that happens, the harvester now falls back to downloading the recording (using the authenticated Selenium session) and sending the audio to OpenAI Whisper. To enable this path:
