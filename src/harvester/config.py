@@ -41,10 +41,10 @@ DASHBOARD_INDICATOR_CSS = '#gtm-IdDashboard'
 
 # --- Courses Page (Selenium) ---
 # Group header: div.domainHeader containing p.title == {group_name}
-GROUP_HEADER_XPATH_TEMPLATE = "//p[normalize-space(.)='{group_name}']/ancestor::div[contains(@class, 'domainHeader')][1]"
+GROUP_HEADER_XPATH_TEMPLATE = "//p[contains(@class, 'title') and normalize-space(.)='{group_name}']/ancestor::div[contains(@class, 'domainHeader')][1]"
 
-# Course link: anchor whose visible identifier matches the course code within a stable container
-COURSE_LINK_XPATH_TEMPLATE = "//span[normalize-space(.)='{course_code}']/ancestor::a[1]"
+# Course link: Div containing the course code span (Cohort 1 structure has no anchor tag)
+COURSE_LINK_XPATH_TEMPLATE = "//span[contains(@class, 'pIdName') and normalize-space(.)='{course_code}']/ancestor::div[contains(@class, 'sc-eDWCr')][1]"
 
 # Fallback course card container (handles layouts where program code sits inside divs under anchor wrappers)
 COURSE_CARD_FALLBACK_XPATH_TEMPLATE = (
@@ -65,6 +65,10 @@ RESOURCES_TAB_SELECTORS = [
     (
         By.XPATH,
         "//p[normalize-space(.)='Resources']/ancestor::li[1]",
+    ),
+    (
+        By.XPATH,
+        "//h4[normalize-space(.)='Resources']",
     ),
 ]
 
@@ -104,91 +108,39 @@ ZOOM_INITIAL_INTERACTIONS = [
 ]
 
 # --- Course Mappings ---
-LEGACY_COURSE_MAP = {
-    # Quantitative Tools for Business
-    "AIML101": {"name": "AIML", "group": "Quantitative Tools for Business"},
-    "PRTC301": {"name": "Statistics", "group": "Quantitative Tools for Business"},
-    # FIX APPLIED: PRTC201 moved from "Quantitative Tools" to "Management Accounting"
-    "PRTC201": {"name": "Excel", "group": "Management Accounting"},
-    # Mathematics for Engineers
-    "CAL101": {"name": "Calculus", "group": "Mathematics for Engineers"},
-    # Management Project - I
-    "MAST401": {"name": "Startup", "group": "Management Project - I"},
-    "CAP101": {"name": "Dropshipping", "group": "Management Project - I"},
-    "COMM101": {"name": "PublicSpeaking", "group": "Management Project - I"},
-    "MAST601": {"name": "Networking", "group": "Management Project - I"},
-    # Computer Science
-    "CS101": {"name": "OOP", "group": "Computer Science"},
-    # Management Accounting
-    "FIFI101": {"name": "FinanceBasics", "group": "Management Accounting"},
-    "MAST102": {"name": "MarketAnalysis", "group": "Management Accounting"},
-    # Marketing Strategies
-    "SAMA101": {"name": "MarketGaps", "group": "Marketing Strategies"},
-    "SAMA401": {"name": "MetaMarketing", "group": "Marketing Strategies"},
-    "SAMA502": {"name": "CRO", "group": "Marketing Strategies"},
+
+# Updated for Cohort 1
+COURSE_MAP = {
+    # Group: Entrepreneurship, Innovation and Design
+    "CRBL101": {"name": "CRBL101", "group": "Entrepreneurship, Innovation and Design", "code": "CRBL101", "full_name": "CRBL101"},
+    "FIFI103": {"name": "FIFI103", "group": "Entrepreneurship, Innovation and Design", "code": "FIFI103", "full_name": "FIFI103"},
+    "FIFI104": {"name": "FIFI104", "group": "Entrepreneurship, Innovation and Design", "code": "FIFI104", "full_name": "FIFI104"},
+    "LEIP101": {"name": "LEIP101", "group": "Entrepreneurship, Innovation and Design", "code": "LEIP101", "full_name": "LEIP101"},
+    "PRTC204": {"name": "PRTC204", "group": "Entrepreneurship, Innovation and Design", "code": "PRTC204", "full_name": "PRTC204"},
+
+    # Group: Management Project - III
+    "CAP023": {"name": "CAP023", "group": "Management Project - III", "code": "CAP023", "full_name": "CAP023"},
+    "CAP024": {"name": "CAP024", "group": "Management Project - III", "code": "CAP024", "full_name": "CAP024"},
+    "CAP025": {"name": "CAP025", "group": "Management Project - III", "code": "CAP025", "full_name": "CAP025"},
+    "CAP301": {"name": "CAP301", "group": "Management Project - III", "code": "CAP301", "full_name": "CAP301"},
+    "COMM203": {"name": "COMM203", "group": "Management Project - III", "code": "COMM203", "full_name": "COMM203"},
+    "STC101": {"name": "STC101", "group": "Management Project - III", "code": "STC101", "full_name": "STC101"},
+
+    # Group: Management Strategy
+    "MAST204": {"name": "MAST204", "group": "Management Strategy", "code": "MAST204", "full_name": "MAST204"},
+    "MAST205": {"name": "MAST205", "group": "Management Strategy", "code": "MAST205", "full_name": "MAST205"},
+
+    # Group: Global Dynamics
+    "LA103": {"name": "LA103", "group": "Global Dynamics", "code": "LA103", "full_name": "LA103"},
+    "MAST103": {"name": "MAST103", "group": "Global Dynamics", "code": "MAST103", "full_name": "MAST103"},
+
+    # Group: Market Research
+    "SAMA103": {"name": "SAMA103", "group": "Market Research", "code": "SAMA103", "full_name": "SAMA103"},
 }
-
-_PARTNER_SUBJECTS = [
-    "AIML101 How do machines see, hear or speak",
-    "PRTC301 How to use statistics to build a better business",
-    "PRTC201 How to get comfortable with excel",
-    "FIFI101 How to understand basic financial terminology",
-    "LA101 How to decode global trends and navigate economic transformations",
-    "MAST102 How to read market for better decision making",
-    "SAMA101 How to identify gaps in the market",
-    "SAMA401 How to execute digital marketing on Meta",
-    "SAMA502 How to execute CRO and increase AOV",
-    "MAST401 How to validate, shape, and launch a startup",
-    "COMM101 How to own a stage",
-    "DRP101 How to build a dropshipping business",
-    "MAST601 How to network effortlessly",
-]
-
-PARTNER_COURSE_TO_GROUP = {
-    "AIML101": "Quantitative Tools for Business",
-    "PRTC301": "Quantitative Tools for Business",
-    # FIX APPLIED: PRTC201 moved from "Quantitative Tools" to "Management Accounting"
-    "PRTC201": "Management Accounting",
-    "MAST401": "Management Project - I",
-    "FIFI101": "Management Accounting",
-    "LA101": "Microeconomics",
-    "MAST102": "Microeconomics",
-    "SAMA101": "Marketing Strategies",
-    "SAMA401": "Marketing Strategies",
-    "SAMA502": "Marketing Strategies",
-    "COMM101": "Management Project - I",
-    "DRP101": "Management Project - I",
-    "MAST601": "Management Project - I",
-}
-
-_partner_map: dict[str, dict] = {}
-for subj in _PARTNER_SUBJECTS:
-    parts = subj.split(" ", 1)
-    if not parts:
-        continue
-    code = parts[0]
-    friendly_name = parts[1].strip() if len(parts) > 1 else code
-    _partner_map[code] = {
-        "full_name": friendly_name,
-        "code": code,
-        "group": PARTNER_COURSE_TO_GROUP.get(code),
-    }
-
-COURSE_MAP: dict[str, dict] = {}
-all_codes = set(LEGACY_COURSE_MAP.keys()) | set(_partner_map.keys())
-for code in sorted(all_codes):
-    partner_entry = _partner_map.get(code)
-    legacy_entry = LEGACY_COURSE_MAP.get(code)
-    merged = {
-        "name": (legacy_entry or {}).get("name") or code,
-        "code": code,
-        "group": (partner_entry or {}).get("group") if partner_entry and partner_entry.get("group") is not None else (legacy_entry or {}).get("group"),
-        "full_name": (partner_entry or {}).get("full_name") or (legacy_entry or {}).get("name") or code,
-    }
-    COURSE_MAP[code] = merged
 
 # Default visible courses (from partner script)
-DEFAULT_VISIBLE_COURSES = {"AIML101", "PRTC301"}
+# Updating to empty or safe default as previous defaults might not exist
+DEFAULT_VISIBLE_COURSES = set()
 
 # --- Other Settings ---
 # Cutoff date logic handled dynamically in the pipeline
