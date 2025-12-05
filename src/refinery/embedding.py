@@ -82,7 +82,7 @@ try:
         # --- Initialize the Vector Store Client ---
         vector_store = SupabaseVectorStore(
             client=supabase,
-            table_name="documents_v2",
+            table_name="documents_cohort1",
             embedding=embeddings_model
         )
         logging.info("SupabaseVectorStore initialized.")

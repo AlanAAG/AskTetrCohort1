@@ -537,7 +537,7 @@ def _invoke_match_documents_rpc(
             }
 
         try:
-            response = supabase_client.rpc("match_documents", payload).execute()
+            response = supabase_client.rpc("match_documents_cohort1", payload).execute()
             if _MATCH_DOCUMENTS_RPC_STYLE != style:
                 _MATCH_DOCUMENTS_RPC_STYLE = style
                 logging.info("Supabase match_documents RPC signature detected: %s", style)
@@ -1014,7 +1014,7 @@ def retrieve_rag_documents(
             payload["filter_class"] = selected_class
 
         try:
-            response = supabase.rpc("match_documents_hybrid", payload).execute()
+            response = supabase.rpc("match_documents_cohort1", payload).execute()
             results = getattr(response, "data", None) or []
 
             duration_ms = (time.time() - start_time) * 1000
@@ -1026,7 +1026,7 @@ def retrieve_rag_documents(
                 f"class_filter={selected_class or 'none'}"
             )
         except Exception as rpc_exc:
-            logging.error("Supabase match_documents_hybrid RPC failed: %s", rpc_exc)
+            logging.error("Supabase match_documents_cohort1 RPC failed: %s", rpc_exc)
             raise
 
         # Alert on slow queries (>1s)
